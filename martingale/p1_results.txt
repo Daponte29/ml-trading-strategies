@@ -1,0 +1,12 @@
+Experiment Results
+===================
+Author: ndaponte3
+GTID: 903357453
+Study Group: None
+
+Figures:
+Figure 1: 10 Episodes w/ infinite bankroll
+Figure 2: means of 1000 Episodes infinite bankroll
+Figure 3: medians of 1000 Episodes infinite bankroll
+Figure 4: means of 1000 Episodes $256 bankroll
+Figure 5: medians of 1000 Episodes $256 bankroll

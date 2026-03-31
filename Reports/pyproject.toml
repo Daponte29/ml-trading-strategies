@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ml4t-reports"
+version = "0.1.0"
+description = "Documentation and report templates for ML4T project deliverables."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []

@@ -1,0 +1,9 @@
+[ML_strategy]
+Cumulative Return: -0.022599999999999953
+Standard Deviation of Daily Returns: 0.015094951919727118
+Average Daily Return: 6.841846981315639e-05
+
+[Benchmark]
+Cumulative Return: 0.012299999999999978
+Standard Deviation of Daily Returns: 0.01700436627121376
+Average Daily Return: 0.00016808697819094233

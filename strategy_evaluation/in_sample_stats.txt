@@ -1,0 +1,9 @@
+[Manual Strategy]
+Cumulative Return: 0.01787999926146644
+Standard Deviation of Daily Returns: nan
+Average Daily Return: inf
+
+[Benchmark]
+Cumulative Return: 0.0
+Standard Deviation of Daily Returns: nan
+Average Daily Return: nan

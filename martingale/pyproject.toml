@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ml4t-martingale"
+version = "0.1.0"
+description = "Monte Carlo analysis of Martingale betting under finite and infinite bankroll assumptions."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "numpy>=1.23",
+  "matplotlib>=3.6"
+]
