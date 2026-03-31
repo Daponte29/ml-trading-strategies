@@ -8,7 +8,7 @@ Using historical prices and SciPy optimization, it solves for asset allocations 
 
 ## Key Files
 - `optimization.py`: optimizer and portfolio statistics
-- `grade_optimization.py`: course grading harness
+- `tests/grade_optimization.py`: course grading harness
 - `Figure1.png`: normalized portfolio vs benchmark visualization
 
 ## Skills Demonstrated

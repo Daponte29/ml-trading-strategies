@@ -12,7 +12,7 @@ It includes in-sample and out-of-sample evaluation and sensitivity experiments f
 - `StrategyLearner.py`: learning-based trading policy
 - `ManualStrategy.py`: rule-based strategy
 - `experiment1.py`, `experiment2.py`: evaluation experiments
-- `testproject.py`: orchestrates training, testing, plotting, and stats output
+- `tests/test_strategy_project.py`: orchestrates training, testing, plotting, and stats output
 - `marketsimcode.py`: portfolio simulation with costs
 
 ## Skills Demonstrated
@@ -22,7 +22,7 @@ It includes in-sample and out-of-sample evaluation and sensitivity experiments f
 
 ## Run
 ```bash
-python testproject.py
+python tests/test_strategy_project.py
 ```
 
 ## Outputs

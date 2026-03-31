@@ -1,100 +1,68 @@
-﻿""""""  		  	   		 	   			  		 			 	 	 		 		 	
-"""  		  	   		 	   			  		 			 	 	 		 		 	
-A simple wrapper for linear regression.  (c) 2015 Tucker Balch  		  	   		 	   			  		 			 	 	 		 		 	
-Note, this is NOT a correct DTLearner; Replace with your own implementation.  		  	   		 	   			  		 			 	 	 		 		 	
-Atlanta, Georgia 30332  		  	   		 	   			  		 			 	 	 		 		 	
-All Rights Reserved  		  	   		 	   			  		 			 	 	 		 		 	
-  		  	   		 	   			  		 			 	 	 		 		 	
-  		  	   		 	   			  		 			 	 	 		 		 	
-works, including solutions to the projects assigned in this course. Students  		  	   		 	   			  		 			 	 	 		 		 	
-or to make it available on publicly viewable websites including repositories  		  	   		 	   			  		 			 	 	 		 		 	
-such as github and gitlab.  This copyright statement should not be removed  		  	   		 	   			  		 			 	 	 		 		 	
-or edited.  		  	   		 	   			  		 			 	 	 		 		 	
-  		  	   		 	   			  		 			 	 	 		 		 	
-We do grant permission to share solutions privately with non-students such  		  	   		 	   			  		 			 	 	 		 		 	
-as potential employers. However, sharing with other current or future  		  	   		 	   			  		 			 	 	 		 		 	
-  		  	   		 	   			  		 			 	 	 		 		 	
-  		  	   		 	   			  		 			 	 	 		 		 	
-Student Name: Nicholas Daponte  		  	   		 	   			  		 			 	 	 		 		 	
-IMPORTANT NOTE: Course Retake Resubmission	 		  	   		 	   			  		 			 	 	 		 		 	
-"""  		  	   		 	   			  		 			 	 	 		 		 	
-#Import packages 		  	   		 	   			  		 			 	 	 		 		 	
-import warnings  		  	   		 	   			  		 			 	 	 		 		 	
-  		  	   		 	   			  		 			 	 	 		 		 	
-import numpy as np  		  	   		 	   			  		 			 	 	 		 		 	
-import numpy.ma as ma  		  	   		 	   			  		 			 	 	 		 		 	
-#////////////////////////////
+﻿"""Deterministic decision tree learner used in defeat_learners experiments."""
+
+import numpy as np
+import numpy.ma as ma
 
 
-  		  	   		 	   			  		 			 	 	 		 		 	
 class DTLearner(object):
-
     def __init__(self, leaf_size=1, verbose=False):
         self.leaf_size = leaf_size
         self.verbose = verbose
-    def author(self):  
-    
+        self.tree = None
+
+    def author(self):
+        return "ndaponte3"
+
     def study_group(self):
-       return 'ndaponte3'  
-    
-    
+        return "ndaponte3"
+
     def add_evidence(self, data_x, data_y):
-        """  		  	   		     		  		  		    	 		 		   		 		  
-        Add training data to learner as
-        numpy.ndarray 		  	   		     		  		  		    	 		 		   		 		  
-        """
         data = np.hstack((data_x, data_y.reshape(-1, 1)))
-        self.tree = self.build_tree(data)
+        self.tree = self._build_tree(data)
 
-    def build_tree(self, data):
-       
-        data_y = data[:, -1] 
-        if data.shape[0] <= self.leaf_size or len(data.shape) == 1:  
-            return np.array([['leaf', np.mean(data_y), -1, -1]])
-        elif np.all(data_y == data[0, -1]):  
-            # return [leaf,	data.y,	NA,	NA]
-            return np.array([['leaf', data[0, -1], -1, -1]])
-        else:
-            # JR Quinlan Decision Tree 
-            best_i = 0
-            highest_corr = -1
-            for i in range(data.shape[1] - 1):
-                corr = ma.corrcoef(ma.masked_invalid(data[:, i]), ma.masked_invalid(data_y))[0, 1]
-                corr = abs(corr)
-                if corr > highest_corr:
-                    highest_corr = corr
-                    best_i = i
+    def _build_tree(self, data):
+        data_y = data[:, -1]
+        if data.shape[0] <= self.leaf_size or len(data.shape) == 1:
+            return np.array([["leaf", np.mean(data_y), -1, -1]])
+        if np.all(data_y == data_y[0]):
+            return np.array([["leaf", data_y[0], -1, -1]])
 
-            splitVal = np.median(data[:, best_i], axis=0)
-            if splitVal == max(data[:, best_i]):
-                return np.array([['leaf', np.mean(data_y), -1, -1]])
+        best_i = 0
+        best_corr = -1
+        for i in range(data.shape[1] - 1):
+            corr = ma.corrcoef(
+                ma.masked_invalid(data[:, i]),
+                ma.masked_invalid(data_y),
+            )[0, 1]
+            corr = abs(corr)
+            if corr > best_corr:
+                best_corr = corr
+                best_i = i
 
-            leftTree = self.build_tree(data[data[:, best_i] <= splitVal])
-            rightTree = self.build_tree(data[data[:, best_i] > splitVal])
-            root = np.array([[best_i, splitVal, 1, leftTree.shape[0] + 1]])
-            decision_tree = np.vstack((np.vstack((root, leftTree)), rightTree))
-            return decision_tree
+        split_val = np.median(data[:, best_i])
+        if split_val == np.max(data[:, best_i]):
+            return np.array([["leaf", np.mean(data_y), -1, -1]])
+
+        left_tree = self._build_tree(data[data[:, best_i] <= split_val])
+        right_tree = self._build_tree(data[data[:, best_i] > split_val])
+        root = np.array([[best_i, split_val, 1, left_tree.shape[0] + 1]])
+        return np.vstack((np.vstack((root, left_tree)), right_tree))
 
     def query(self, points):
-      
-        # Given points as X_test, return Y_test
         results = []
-        root = self.tree
+        tree = self.tree
         for i in range(points.shape[0]):
             node = 0
-            while root[node, 0] != 'leaf':
-                index = root[node, 0]
-                splitVal = root[node, 1]
-                if points[i, int(float(index))] <= float(splitVal):
-                    left = int(float(root[node, 2]))
-                    node = node + left
+            while tree[node, 0] != "leaf":
+                index = int(float(tree[node, 0]))
+                split_val = float(tree[node, 1])
+                if points[i, index] <= split_val:
+                    node += int(float(tree[node, 2]))
                 else:
-                    right = int(float(root[node, 3]))
-                    node = node + right
-            result = root[node, 1]
-            results.append(float(result))
-        return np.array(results)	 	   			  		 			 	 	 		 		 	
-  		  	   		 	   			  		 			 	 	 		 		 	
-  		  	   		 	   			  		 			 	 	 		 		 	
-if __name__ == "__main__":  		  	   		 	   			  		 			 	 	 		 		 	
-    print("the secret clue is 'zzyzx'")  		  	   		 	   			  		 			 	 	 		 		 	
+                    node += int(float(tree[node, 3]))
+            results.append(float(tree[node, 1]))
+        return np.array(results)
+
+
+if __name__ == "__main__":
+    print("DTLearner module")

@@ -1,4 +1,11 @@
-﻿"""MC3-P3: Strategy Learner - grading script.  		  	   		 	   			  		 			 	 	 		 		 	
+import os
+import sys
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+"""MC3-P3: Strategy Learner - grading script.  		  	   		 	   			  		 			 	 	 		 		 	
   		  	   		 	   			  		 			 	 	 		 		 	
 Usage:  		  	   		 	   			  		 			 	 	 		 		 	
 - Switch to a student feedback directory first (will write "points.txt" and "comments.txt" in pwd).  		  	   		 	   			  		 			 	 	 		 		 	
@@ -561,3 +568,4 @@ def compute_portvals(
   		  	   		 	   			  		 			 	 	 		 		 	
 if __name__ == "__main__":  		  	   		 	   			  		 			 	 	 		 		 	
     pytest.main(["-s", __file__])  		  	   		 	   			  		 			 	 	 		 		 	
+

@@ -1,61 +1,54 @@
-﻿import numpy as np
+"""Random tree learner used by strategy evaluation bagging."""
+
+import numpy as np
+
 
 class RTLearner(object):
-    def __init__(self, leaf_size, verbose=False):
+    def __init__(self, leaf_size=1, verbose=False):
         self.leaf_size = leaf_size
         self.verbose = verbose
-        self.learner = np.array([])
+        self.tree = None
 
-    def build_tree(self, data):
-        # If the data has less than or equal to the leaf size, return a leaf
+    def _build_tree(self, data):
         if data.shape[0] <= self.leaf_size:
-            return np.array([['leaf', np.mean(data[:, -1]), '-1', '-1']])
-        
-        # Select random attribute for splitting
-        X_attr = np.random.randint(data.shape[1] - 1)
+            return np.array([["leaf", np.mean(data[:, -1]), -1, -1]], dtype=object)
 
-        # If all values in the selected attribute are the same, return a leaf
-        if np.all(data[:, X_attr] == data[0, X_attr]):
-            return np.array([['leaf', np.mean(data[:, -1]), '-1', '-1']])
+        split_feature = np.random.randint(data.shape[1] - 1)
+        if np.all(data[:, split_feature] == data[0, split_feature]):
+            return np.array([["leaf", np.mean(data[:, -1]), -1, -1]], dtype=object)
 
-        # Sort data based on the selected attribute
-        data = data[np.argsort(data[:, X_attr])]
-        splitVal = np.median(data[:, X_attr])
+        split_value = np.median(data[:, split_feature])
+        left_mask = data[:, split_feature] <= split_value
+        right_mask = data[:, split_feature] > split_value
 
-        # If max value equals the split value, return a leaf
-        if np.max(data[:, X_attr]) == splitVal:
-            return np.array([['leaf', np.mean(data[:, -1]), '-1', '-1']])
+        if not left_mask.any() or not right_mask.any():
+            return np.array([["leaf", np.mean(data[:, -1]), -1, -1]], dtype=object)
 
-        # Build left and right sub-trees
-        leftTree = self.build_tree(data[data[:, X_attr] <= splitVal])
-        rightTree = self.build_tree(data[data[:, X_attr] > splitVal])
-        
-        # Root of the tree
-        root = [X_attr, splitVal, '1', str(leftTree.shape[0] + 1)]
-        tree = np.vstack((root, leftTree, rightTree))
-        
-        return tree
+        left_tree = self._build_tree(data[left_mask])
+        right_tree = self._build_tree(data[right_mask])
+        root = np.array([[split_feature, split_value, 1, left_tree.shape[0] + 1]], dtype=object)
+        return np.vstack((root, left_tree, right_tree))
 
-    def add_evidence(self, Xtrain, Ytrain):
-        data = np.concatenate((Xtrain, Ytrain[:, None]), axis=1)
-        self.learner = self.build_tree(data)
+    def add_evidence(self, data_x, data_y):
+        data = np.column_stack((data_x, data_y))
+        self.tree = self._build_tree(data)
 
-    def query(self, trainX):
-        predY = np.array([])
-        for data in trainX:
+    def query(self, points):
+        preds = []
+        for point in points:
             row = 0
-            while self.learner[row][0] != 'leaf':
-                X_attr = int(float(self.learner[row][0]))
-                splitVal = float(self.learner[row][1])
-                if float(data[X_attr]) <= splitVal:
-                    row = row + int(float(self.learner[row][2]))
+            while self.tree[row, 0] != "leaf":
+                feature = int(self.tree[row, 0])
+                split_val = float(self.tree[row, 1])
+                if point[feature] <= split_val:
+                    row += int(self.tree[row, 2])
                 else:
-                    row = row + int(float(self.learner[row][3]))
-            if self.learner[row][0] == 'leaf':
-                predY = np.append(predY, float(self.learner[row][1]))
-        return predY
+                    row += int(self.tree[row, 3])
+            preds.append(float(self.tree[row, 1]))
+        return np.array(preds)
 
     def author(self):
+        return "ndaponte3"
 
     def study_group(self):
-        return 'ndaponte3'
+        return "ndaponte3"

@@ -1,157 +1,143 @@
-﻿# -*- coding: utf-8 -*-
-"""
-Created on Sat Jul  6 16:17:11 2024
+﻿"""Technical indicators used by indicator and strategy evaluation projects."""
 
-@author: nolot
-"""
-import pandas as pd
-import numpy as np
-from util import get_data
-import matplotlib.dates as mdates
-import datetime as dt
 import matplotlib.pyplot as plt
-#--------------------------------------------------
+import numpy as np
+import pandas as pd
 
-'''
-5 Indicators Chosen:
-    *EMA
-    *RSI
-    *Bollinger Bands
-    *CCI
-    *MACD
-'''
 
-def author(): 
-    return 'ndaponte3'
+def author():
+    return "ndaponte3"
+
 
 def study_group():
-   return 'ndaponte3' 
+    return "ndaponte3"
+
 
 def compute_ema(df, span=30):
+    """Compute and plot Exponential Moving Average."""
     ema_df = df.copy()
-    ema_df['EMA'] = df['JPM'].ewm(span=span).mean()  
+    ema_df["EMA"] = df["JPM"].ewm(span=span).mean()
 
     plt.figure()
-    plt.plot(ema_df.index, ema_df['JPM'], label='JPM')
-    plt.plot(ema_df.index, ema_df['EMA'], label='EMA', color='red')
+    plt.plot(ema_df.index, ema_df["JPM"], label="JPM")
+    plt.plot(ema_df.index, ema_df["EMA"], label="EMA", color="red")
     plt.legend()
-    plt.title('Exponential Moving Average (EMA)')
-    plt.xlabel('Date')
-    plt.ylabel('Price')
-    plt.xticks(rotation=45) #Rotate x_labels
-    plt.savefig('EMA.png')
-    #plt.show()
+    plt.title("Exponential Moving Average (EMA)")
+    plt.xlabel("Date")
+    plt.ylabel("Price")
+    plt.xticks(rotation=45)
+    plt.savefig("EMA.png")
     plt.close()
 
     return ema_df.dropna()
 
+
 def compute_rsi(df, period=14):
+    """Compute and plot Relative Strength Index."""
     delta = df.diff(1)
     gain = delta.where(delta > 0, 0)
     loss = -delta.where(delta < 0, 0)
 
     avg_gain = gain.rolling(window=period).mean()
     avg_loss = loss.rolling(window=period).mean()
-
     rs = avg_gain / avg_loss
     rsi = 100 - (100 / (1 + rs))
 
-    rsi_df = pd.DataFrame(index=df.index)  # Create an empty DataFrame with the same index
-    rsi_df['RSI'] = rsi
+    rsi_df = pd.DataFrame(index=df.index)
+    rsi_df["RSI"] = rsi
 
     plt.figure()
-    plt.plot(rsi_df.index, rsi_df['RSI'], label='RSI')
-    plt.axhline(70, color='r', linestyle='--', label='Overbought')
-    plt.axhline(30, color='g', linestyle='--', label='Oversold')
+    plt.plot(rsi_df.index, rsi_df["RSI"], label="RSI")
+    plt.axhline(70, color="r", linestyle="--", label="Overbought")
+    plt.axhline(30, color="g", linestyle="--", label="Oversold")
     plt.legend()
-    plt.title('Relative Strength Index (RSI)')
-    plt.xlabel('Date')
-    plt.ylabel('Value')
+    plt.title("Relative Strength Index (RSI)")
+    plt.xlabel("Date")
+    plt.ylabel("Value")
     plt.xticks(rotation=45)
-    plt.savefig('RSI.png')
-    #plt.show()
+    plt.savefig("RSI.png")
     plt.close()
 
     return rsi_df.dropna()
 
+
 def compute_bollinger_bands(df, window=20):
+    """Compute and plot Bollinger Bands plus BBP."""
     sma = df.rolling(window=window).mean()
     std = df.rolling(window=window).std()
-
     upper_band = sma + (2 * std)
     lower_band = sma - (2 * std)
     bbp = (df - lower_band) / (upper_band - lower_band)
 
-    plt.figure(figsize=(10, 6))  # Adjust figure size as needed
-    plt.plot(df.index, df, label='JPM')
-    plt.plot(sma.index, sma, label='SMA', color='yellow')  # Plot SMA as black line
-    plt.plot(upper_band.index, upper_band, label='Upper Band', color='red')  # Plot Upper Band as red line
-    plt.plot(lower_band.index, lower_band, label='Lower Band', color='blue')  # Plot Lower Band as blue line
-    plt.fill_between(df.index, lower_band.squeeze(), upper_band.squeeze(), color='grey', alpha=0.3)
+    plt.figure(figsize=(10, 6))
+    plt.plot(df.index, df, label="JPM")
+    plt.plot(sma.index, sma, label="SMA", color="yellow")
+    plt.plot(upper_band.index, upper_band, label="Upper Band", color="red")
+    plt.plot(lower_band.index, lower_band, label="Lower Band", color="blue")
+    plt.fill_between(df.index, lower_band.squeeze(), upper_band.squeeze(), color="grey", alpha=0.3)
     plt.legend()
-    plt.title('Bollinger Bands')
-    plt.xlabel('Date')
-    plt.ylabel('Price')
+    plt.title("Bollinger Bands")
+    plt.xlabel("Date")
+    plt.ylabel("Price")
     plt.xticks(rotation=45)
-    plt.tight_layout()  # Ensures labels fit nicely in the plot
-    plt.savefig('Bollinger_Bands.png')
-    #plt.show()
+    plt.tight_layout()
+    plt.savefig("Bollinger_Bands.png")
     plt.close()
 
     bb_df = pd.DataFrame(index=df.index)
-    bb_df['Price'] = df.squeeze()
-    bb_df['SMA'] = sma.squeeze()
-    bb_df['Upper Band'] = upper_band.squeeze()
-    bb_df['Lower Band'] = lower_band.squeeze()
-    bb_df['BBP'] = bbp.squeeze()
-
+    bb_df["Price"] = df.squeeze()
+    bb_df["SMA"] = sma.squeeze()
+    bb_df["Upper Band"] = upper_band.squeeze()
+    bb_df["Lower Band"] = lower_band.squeeze()
+    bb_df["BBP"] = bbp.squeeze()
     return bb_df.dropna()
 
-def compute_cci(df, ndays=20):
-    tp = (df.iloc[:, 0] + df.iloc[:, 1] + df.iloc[:, 2]) / 3 
-    sma = tp.rolling(window=ndays).mean()
-    mad = tp.rolling(window=ndays).apply(lambda x: np.fabs(x - x.mean()).mean())
 
-    cci = (tp - sma) / (0.015 * mad)
+def compute_cci(df, ndays=20):
+    """Compute and plot Commodity Channel Index from high/low/close frame."""
+    typical_price = (df.iloc[:, 0] + df.iloc[:, 1] + df.iloc[:, 2]) / 3
+    sma = typical_price.rolling(window=ndays).mean()
+    mad = typical_price.rolling(window=ndays).apply(lambda x: np.fabs(x - x.mean()).mean())
+    cci = (typical_price - sma) / (0.015 * mad)
 
     cci_df = df.copy()
-    cci_df['CCI'] = cci
+    cci_df["CCI"] = cci
 
     plt.figure()
-    plt.plot(cci_df.index, cci_df['CCI'], label='CCI')
-    plt.axhline(100, color='r', linestyle='--', label='Overbought')
-    plt.axhline(-100, color='g', linestyle='--', label='Oversold')
+    plt.plot(cci_df.index, cci_df["CCI"], label="CCI")
+    plt.axhline(100, color="r", linestyle="--", label="Overbought")
+    plt.axhline(-100, color="g", linestyle="--", label="Oversold")
     plt.legend()
-    plt.title('Commodity Channel Index (CCI)')
-    plt.xlabel('Date')
-    plt.xticks(rotation=45) #Rotate x_labels
-    plt.ylabel('CCI Value')
-    plt.savefig('CCI.png')  # Save the figure before showing
-    #plt.show()
+    plt.title("Commodity Channel Index (CCI)")
+    plt.xlabel("Date")
+    plt.ylabel("CCI Value")
+    plt.xticks(rotation=45)
+    plt.savefig("CCI.png")
     plt.close()
 
     return cci_df.dropna()
 
+
 def compute_macd(df, short_period=12, long_period=26, signal_period=9):
+    """Compute and plot MACD and signal line."""
     short_ema = df.ewm(span=short_period, adjust=False).mean()
     long_ema = df.ewm(span=long_period, adjust=False).mean()
     macd = short_ema - long_ema
     signal = macd.ewm(span=signal_period, adjust=False).mean()
 
     macd_df = df.copy()
-    macd_df['MACD'] = macd
-    macd_df['Signal'] = signal
+    macd_df["MACD"] = macd
+    macd_df["Signal"] = signal
 
     plt.figure()
-    plt.plot(macd_df.index, macd_df['MACD'], label='MACD')
-    plt.plot(macd_df.index, macd_df['Signal'], label='Signal Line')
+    plt.plot(macd_df.index, macd_df["MACD"], label="MACD")
+    plt.plot(macd_df.index, macd_df["Signal"], label="Signal Line")
     plt.legend()
-    plt.title('Moving Average Convergence Divergence (MACD)')
-    plt.xlabel('Date')
+    plt.title("Moving Average Convergence Divergence (MACD)")
+    plt.xlabel("Date")
+    plt.ylabel("MACD Value")
     plt.xticks(rotation=45)
-    plt.ylabel('MACD Value')
-    #plt.show()
-    plt.savefig('MACD.png')
+    plt.savefig("MACD.png")
     plt.close()
 
     return macd_df.dropna()

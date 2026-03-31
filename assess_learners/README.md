@@ -15,11 +15,11 @@ The analysis script sweeps leaf sizes and compares in-sample vs out-of-sample pe
 
 ## Key Files
 
-* `testlearner.py`: main experiment driver and figure generation
+* `tests/testlearner.py`: main experiment driver and figure generation
 * `DTLearner.py`, `RTLearner.py`: tree learners
 * `BagLearner.py`, `InsaneLearner.py`: ensemble learners
 * `LinRegLearner.py`: regression baseline
-* `grade_learners.py`: course grading harness
+* `tests/grade_learners.py`: course grading harness
 
 ## Skills Demonstrated
 
@@ -31,7 +31,7 @@ The analysis script sweeps leaf sizes and compares in-sample vs out-of-sample pe
 ## Run
 
 ```bash
-python testlearner.py Data/Istanbul.csv
+python tests/testlearner.py Data/Istanbul.csv
 ```
 
 ## Outputs

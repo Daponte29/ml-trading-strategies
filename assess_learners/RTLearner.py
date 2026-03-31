@@ -1,75 +1,58 @@
-﻿#Libraries///////////
-import numpy as np
+﻿"""Randomized decision tree learner for regression."""
+
 import random
-#////////////////////
-#IMPORTANT NOTE: Summer 2024 Course Ratake Student Resubmission
+
+import numpy as np
+
 
 class RTLearner(object):
+    """A random-tree regressor using random split feature selection."""
 
     def __init__(self, leaf_size=1, verbose=False):
         self.leaf_size = leaf_size
         self.verbose = verbose
-    def author(self):  
+        self.tree = None
+
+    def author(self):
+        return "ndaponte3"
+
     def study_group(self):
-       return 'ndaponte3'
-   
-    
-    
+        return "ndaponte3"
+
     def add_evidence(self, data_x, data_y):
-        """
-        Add training data to learner
-        :param data_x: A set of feature values used to train the learner
-        :type data_x: numpy.ndarray
-        :param data_y: The value we are attempting to predict given the X data
-        :type data_y: numpy.ndarray
-        """
+        """Train the learner with features and labels."""
         data = np.hstack((data_x, data_y.reshape(-1, 1)))
-        self.tree = self.build_tree(data)
+        self.tree = self._build_tree(data)
 
-    def build_tree(self, data):
-        # build and save the tree: X_train, Y_train
+    def _build_tree(self, data):
         data_y = data[:, -1]
-        if data.shape[0] <= self.leaf_size or len(data.shape) == 1:  # only 1 row
-            return np.array([['leaf', np.mean(data_y), -1, -1]])
-        elif np.all(data_y == data[0, -1]):  # all elements in Y are same
-            # return [leaf,	data.y,	NA,	NA]
-            return np.array([['leaf', data[0, -1], -1, -1]])
-        else:
-            # A	Cutler Decision Tree Algorithm:
-            # determine random feature 'i' to split on
-            best_i = random.randint(0, data.shape[1] - 2)
-            splitVal = np.median(data[:, best_i], axis=0)
-            if splitVal == max(data[:, best_i]):
-                return np.array([['leaf', np.mean(data_y), -1, -1]])
+        if data.shape[0] <= self.leaf_size or len(data.shape) == 1:
+            return np.array([["leaf", np.mean(data_y), -1, -1]])
+        if np.all(data_y == data_y[0]):
+            return np.array([["leaf", data_y[0], -1, -1]])
 
-            leftTree = self.build_tree(data[data[:, best_i] <= splitVal])
-            rightTree = self.build_tree(data[data[:, best_i] > splitVal])
-            root = np.array([[best_i, splitVal, 1, leftTree.shape[0] + 1]])
-            decision_tree = np.vstack((np.vstack((root, leftTree)), rightTree))
-            return decision_tree
+        best_i = random.randint(0, data.shape[1] - 2)
+        split_val = np.median(data[:, best_i])
+        if split_val == np.max(data[:, best_i]):
+            return np.array([["leaf", np.mean(data_y), -1, -1]])
+
+        left_tree = self._build_tree(data[data[:, best_i] <= split_val])
+        right_tree = self._build_tree(data[data[:, best_i] > split_val])
+        root = np.array([[best_i, split_val, 1, left_tree.shape[0] + 1]])
+        return np.vstack((np.vstack((root, left_tree)), right_tree))
 
     def query(self, points):
-        """
-        Estimate a set of test points given the tree we built.
-        :param points: A numpy array with each row corresponding to a specific query.
-        :type points: numpy.ndarray
-        :return: The predicted result of the input data according to the trained tree
-        :rtype: numpy.ndarray
-        """
-        # Given points as X_test, return results as Y_test
+        """Predict values for each row in points."""
         results = []
-        root = self.tree
+        tree = self.tree
         for i in range(points.shape[0]):
             node = 0
-            while root[node, 0] != 'leaf':
-                index = root[node, 0]
-                splitVal = root[node, 1]
-                if points[i, int(float(index))] <= float(splitVal):
-                    left = int(float(root[node, 2]))
-                    node = node + left
+            while tree[node, 0] != "leaf":
+                index = int(float(tree[node, 0]))
+                split_val = float(tree[node, 1])
+                if points[i, index] <= split_val:
+                    node += int(float(tree[node, 2]))
                 else:
-                    right = int(float(root[node, 3]))
-                    node = node + right
-            result = root[node, 1]
-            results.append(float(result))
+                    node += int(float(tree[node, 3]))
+            results.append(float(tree[node, 1]))
         return np.array(results)

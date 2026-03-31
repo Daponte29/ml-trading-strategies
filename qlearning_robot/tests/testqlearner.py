@@ -1,4 +1,11 @@
-﻿""""""  		  	   		 	   			  		 			 	 	 		 		 	
+import os
+import sys
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+""""""  		  	   		 	   			  		 			 	 	 		 		 	
 """  		  	   		 	   			  		 			 	 	 		 		 	
 Test a Q Learner in a navigation problem.  (c) 2015 Tucker Balch  		  	   		 	   			  		 			 	 	 		 		 	
 2016-10-20 Added "quicksand" and uncertain actions.  		  	   		 	   			  		 			 	 	 		 		 	
@@ -175,7 +182,7 @@ def test(map, epochs, learner, verbose):
     :type epochs: int  		  	   		 	   			  		 			 	 	 		 		 	
     :param learner: the qlearner object  		  	   		 	   			  		 			 	 	 		 		 	
     :type learner: QLearner  		  	   		 	   			  		 			 	 	 		 		 	
-    :param verbose: If â€œverboseâ€ is True, your code can print out information for debugging.  		  	   		 	   			  		 			 	 	 		 		 	
+    :param verbose: If “verbose” is True, your code can print out information for debugging.  		  	   		 	   			  		 			 	 	 		 		 	
         If verbose = False your code should not generate ANY output. When we test your code, verbose will be False.  		  	   		 	   			  		 			 	 	 		 		 	
     :type verbose: bool  		  	   		 	   			  		 			 	 	 		 		 	
     :return: the total reward  		  	   		 	   			  		 			 	 	 		 		 	
@@ -286,3 +293,4 @@ def test_code():
   		  	   		 	   			  		 			 	 	 		 		 	
 if __name__ == "__main__":  		  	   		 	   			  		 			 	 	 		 		 	
     test_code()  		  	   		 	   			  		 			 	 	 		 		 	
+

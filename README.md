@@ -23,7 +23,7 @@ Personal project repository for machine learning, reinforcement learning, market
 
 
 1. Create and activate a Python virtual environment.
-2. Install dependencies from `requirements.txt`.
+2. Install dependencies with `pip install -e .`.
 3. Run each project from its own folder using its local `README.md` instructions.
 
 ## Notes

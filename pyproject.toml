@@ -1,0 +1,16 @@
+[project]
+name = "ml4t-trading-and-learning-lab"
+version = "0.1.0"
+description = "Personal machine learning and trading experiment repository"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.23",
+    "pandas>=1.5",
+    "matplotlib>=3.6",
+    "scipy>=1.10",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
