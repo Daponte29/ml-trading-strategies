@@ -1,3 +1,3 @@
 
-"""Test and grading scripts for indicator_evaluation."""
+"""Test and validation scripts for indicator_evaluation."""
 

@@ -1,3 +1,3 @@
 
-"""Test and grading scripts for qlearning_robot."""
+"""Test and validation scripts for qlearning_robot."""
 

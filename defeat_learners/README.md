@@ -12,7 +12,7 @@ This demonstrates understanding of model inductive bias and how data-generating 
 - `gen_data.py`: synthetic data generators (`best_4_lin_reg`, `best_4_dt`)
 - `tests/testbest4.py`: experiment and validation script
 - `DTLearner.py`, `LinRegLearner.py`: learner implementations used for comparison
-- `tests/grade_best4.py`: course grading harness
+- `tests/grade_best4.py`: system validation harness
 
 ## Skills Demonstrated
 - Synthetic data design for controlled ML experiments

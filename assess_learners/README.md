@@ -19,7 +19,7 @@ The analysis script sweeps leaf sizes and compares in-sample vs out-of-sample pe
 * `DTLearner.py`, `RTLearner.py`: tree learners
 * `BagLearner.py`, `InsaneLearner.py`: ensemble learners
 * `LinRegLearner.py`: regression baseline
-* `tests/grade_learners.py`: course grading harness
+* `tests/grade_learners.py`: system validation harness
 
 ## Skills Demonstrated
 

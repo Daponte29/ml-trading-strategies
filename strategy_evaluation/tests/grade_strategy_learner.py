@@ -41,7 +41,7 @@ import numpy as np
 import pandas as pd  		  	   		 	   			  		 			 	 	 		 		 	
 import pytest  		  	   		 	   			  		 			 	 	 		 		 	
 import util  		  	   		 	   			  		 			 	 	 		 		 	
-from grading.grading import (  		  	   		 	   			  		 			 	 	 		 		 	
+from system_tests.grading import (  	  		 			  		 	 		 	
     GradeResult,  		  	   		 	   			  		 			 	 	 		 		 	
     IncorrectOutput,  		  	   		 	   			  		 			 	 	 		 		 	
     grader,  		  	   		 	   			  		 			 	 	 		 		 	

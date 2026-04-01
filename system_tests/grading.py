@@ -1,4 +1,4 @@
-"""MLT - Grading components (based on pytest fixtures).  		  	   		 	   			  		 			 	 	 		 		 	
+"""MLT - System test components (based on pytest fixtures).  	  		 			  		 	 		 	
   		  	   		 	   			  		 			 	 	 		 		 	
 Note: Writes results to "comments.txt" in current working directory.  		  	   		 	   			  		 			 	 	 		 		 	
 """  		  	   		 	   			  		 			 	 	 		 		 	

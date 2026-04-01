@@ -1,3 +1,3 @@
 
-"""Test and grading scripts for marketsim."""
+"""Test and validation scripts for marketsim."""
 

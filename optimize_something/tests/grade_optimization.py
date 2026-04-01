@@ -23,7 +23,7 @@ import numpy as np
   		  	   		 	   			  		 			 	 	 		 		 	
 import pandas as pd  		  	   		 	   			  		 			 	 	 		 		 	
 import pytest  		  	   		 	   			  		 			 	 	 		 		 	
-from grading.grading import GradeResult, IncorrectOutput, grader, time_limit  		  	   		 	   			  		 			 	 	 		 		 	
+from system_tests.grading import GradeResult, IncorrectOutput, grader, time_limit  	  		 			  		 	 		 	
 from util import get_data  		  	   		 	   			  		 			 	 	 		 		 	
   		  	   		 	   			  		 			 	 	 		 		 	
 # from portfolio.analysis import get_portfolio_value, get_portfolio_stats  		  	   		 	   			  		 			 	 	 		 		 	

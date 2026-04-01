@@ -1,3 +1,3 @@
 
-"""Test and grading scripts for strategy_evaluation."""
+"""Test and validation scripts for strategy_evaluation."""
 

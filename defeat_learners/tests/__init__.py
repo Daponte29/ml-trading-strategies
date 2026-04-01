@@ -1,3 +1,3 @@
 
-"""Test and grading scripts for defeat_learners."""
+"""Test and validation scripts for defeat_learners."""
 

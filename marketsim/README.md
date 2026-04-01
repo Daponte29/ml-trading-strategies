@@ -13,7 +13,7 @@ It supports transaction costs through:
 * `marketsim.py`: core simulator (`compute_portvals`)
 * `orders/`: sample order files
 * `additional_orders/`: additional test scenarios
-* `tests/grade_marketsim.py`: course grading harness
+* `tests/grade_marketsim.py`: system validation harness
 
 ## Skills Demonstrated
 

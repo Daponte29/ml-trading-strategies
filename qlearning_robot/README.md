@@ -11,7 +11,7 @@ The learner is designed for grid/world navigation tasks and demonstrates reinfor
 - `QLearner.py`: Q-learning and Dyna-Q implementation
 - `tests/testqlearner.py`: evaluation script
 - `testworlds/`: environment definitions
-- `tests/grade_robot_qlearning.py`: course grading harness
+- `tests/grade_robot_qlearning.py`: system validation harness
 
 ## Skills Demonstrated
 - Reinforcement learning from scratch
