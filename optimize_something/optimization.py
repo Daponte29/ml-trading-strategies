@@ -13,7 +13,7 @@ def author():
 
 
 def study_group():
-    return "None"
+    return "ndaponte3"
 
 
 def assess_portfolio(allocs, prices):

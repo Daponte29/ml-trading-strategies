@@ -13,16 +13,24 @@ def study_group():
     return "ndaponte3"
 
 
+def _single_symbol(df):
+    """Return the single symbol column name for one-asset indicator inputs."""
+    if len(df.columns) != 1:
+        raise ValueError("Expected a single-symbol DataFrame input.")
+    return df.columns[0]
+
+
 def compute_ema(df, span=30):
     """Compute and plot Exponential Moving Average."""
+    symbol = _single_symbol(df)
     ema_df = df.copy()
-    ema_df["EMA"] = df["JPM"].ewm(span=span).mean()
+    ema_df["EMA"] = ema_df[symbol].ewm(span=span).mean()
 
     plt.figure()
-    plt.plot(ema_df.index, ema_df["JPM"], label="JPM")
+    plt.plot(ema_df.index, ema_df[symbol], label=symbol)
     plt.plot(ema_df.index, ema_df["EMA"], label="EMA", color="red")
     plt.legend()
-    plt.title("Exponential Moving Average (EMA)")
+    plt.title(f"Exponential Moving Average (EMA) - {symbol}")
     plt.xlabel("Date")
     plt.ylabel("Price")
     plt.xticks(rotation=45)
@@ -63,6 +71,7 @@ def compute_rsi(df, period=14):
 
 def compute_bollinger_bands(df, window=20):
     """Compute and plot Bollinger Bands plus BBP."""
+    symbol = _single_symbol(df)
     sma = df.rolling(window=window).mean()
     std = df.rolling(window=window).std()
     upper_band = sma + (2 * std)
@@ -70,7 +79,7 @@ def compute_bollinger_bands(df, window=20):
     bbp = (df - lower_band) / (upper_band - lower_band)
 
     plt.figure(figsize=(10, 6))
-    plt.plot(df.index, df, label="JPM")
+    plt.plot(df.index, df[symbol], label=symbol)
     plt.plot(sma.index, sma, label="SMA", color="yellow")
     plt.plot(upper_band.index, upper_band, label="Upper Band", color="red")
     plt.plot(lower_band.index, lower_band, label="Lower Band", color="blue")
@@ -85,7 +94,7 @@ def compute_bollinger_bands(df, window=20):
     plt.close()
 
     bb_df = pd.DataFrame(index=df.index)
-    bb_df["Price"] = df.squeeze()
+    bb_df["Price"] = df[symbol]
     bb_df["SMA"] = sma.squeeze()
     bb_df["Upper Band"] = upper_band.squeeze()
     bb_df["Lower Band"] = lower_band.squeeze()
@@ -120,6 +129,7 @@ def compute_cci(df, ndays=20):
 
 def compute_macd(df, short_period=12, long_period=26, signal_period=9):
     """Compute and plot MACD and signal line."""
+    symbol = _single_symbol(df)
     short_ema = df.ewm(span=short_period, adjust=False).mean()
     long_ema = df.ewm(span=long_period, adjust=False).mean()
     macd = short_ema - long_ema
@@ -133,7 +143,7 @@ def compute_macd(df, short_period=12, long_period=26, signal_period=9):
     plt.plot(macd_df.index, macd_df["MACD"], label="MACD")
     plt.plot(macd_df.index, macd_df["Signal"], label="Signal Line")
     plt.legend()
-    plt.title("Moving Average Convergence Divergence (MACD)")
+    plt.title(f"Moving Average Convergence Divergence (MACD) - {symbol}")
     plt.xlabel("Date")
     plt.ylabel("MACD Value")
     plt.xticks(rotation=45)

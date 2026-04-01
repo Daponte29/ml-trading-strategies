@@ -9,7 +9,7 @@ def author():
 
 
 def study_group():
-    return "None"
+    return "ndaponte3"
 
 
 def gtid():

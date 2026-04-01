@@ -26,6 +26,12 @@ Personal project repository for machine learning, reinforcement learning, market
 2. Install dependencies with `pip install -e .`.
 3. Run each project from its own folder using its local `README.md` instructions.
 
+## Dependency Policy
+
+* `pyproject.toml` is the source of truth for dependencies.
+* `requirements.txt` is intentionally not used in this repo.
+* A lock file is optional and tool-specific (for example `uv.lock` or `poetry.lock`) and should be added only when the team standardizes on one resolver.
+
 ## Notes
 
 * Historical price data used by projects is stored under `data/`.
